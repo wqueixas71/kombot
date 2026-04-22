@@ -1,0 +1,21 @@
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Pastas de IDEs/Editores
+.vscode/
+.idea/
+
+# Arquivos de ambiente e segredos (NUNCA versione isso!)
+.env
+*.pem
+*.key
+
+# ambientes virtuais
+venv/
+env/
+__pycache__/
+.venv
+
+# Logs gerais
+*.log

@@ -1,0 +1,11 @@
+# Arquivos de estado (contêm segredos!)
+*.tfstate
+*.tfstate.*
+
+# Pastas de provedores e módulos (o erro que você teve)
+.terraform/
+.terraform.lock.hcl
+
+# Arquivos de plano do terraform
+*.tfplan
+*.tfvars

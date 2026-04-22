@@ -1,0 +1,10 @@
+# Ambiente virtual (comum em Python)
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Arquivos de build ou pacotes baixados
+dist/
+build/
+*.egg-info/
