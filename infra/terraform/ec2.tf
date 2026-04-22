@@ -7,6 +7,12 @@ resource "aws_instance" "kombot" {
   key_name                    = var.key_name
   associate_public_ip_address = true
 
+  user_data = templatefile("${path.module}/user_data.sh.tftpl", {
+    aws_region   = var.aws_region
+    app_env      = var.app_env
+    project_name = var.project_name
+  })
+
   metadata_options {
     http_tokens = "required"
   }
@@ -20,4 +26,5 @@ resource "aws_instance" "kombot" {
   tags = {
     Name = "${local.name_prefix}-ec2"
   }
+
 }

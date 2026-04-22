@@ -37,9 +37,9 @@ data "aws_iam_policy_document" "ssm_access" {
   }
 
   statement {
-    sid     = "DecryptSecureString"
-    effect  = "Allow"
-    actions = ["kms:Decrypt"]
+    sid       = "DecryptSecureString"
+    effect    = "Allow"
+    actions   = ["kms:Decrypt"]
     resources = ["*"]
   }
 }

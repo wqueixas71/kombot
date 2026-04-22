@@ -1,0 +1,39 @@
+#!/bin/bash
+set -euxo pipefail
+
+dnf update -y
+dnf install -y git python3 python3-pip
+
+id kombot || useradd -m -s /bin/bash kombot
+
+mkdir -p /opt/kombot
+chown -R kombot:kombot /opt/kombot
+
+cat > /etc/systemd/system/kombot.service <<EOF
+[Unit]
+Description=Kombot Streamlit App
+After=network.target
+
+[Service]
+Type=simple
+User=kombot
+Group=kombot
+WorkingDirectory=/opt/kombot/app
+
+Environment="AWS_REGION=${aws_region}"
+Environment="APP_ENV=${app_env}"
+Environment="PROJECT_NAME=${project_name}"
+
+ExecStart=/opt/kombot/venv/bin/streamlit run /opt/kombot/app/kombot_cycling_assistant.py --server.port 8501 --server.address 0.0.0.0
+
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable kombot
+
+echo "Bootstrap concluído em $(date)" > /var/log/kombot-bootstrap.log

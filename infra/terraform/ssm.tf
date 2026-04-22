@@ -1,7 +1,7 @@
 resource "aws_ssm_parameter" "gemini_api_key" {
-  name      = "/${var.project_name}/${var.environment}/GEMINI_API_KEY"
-  type      = "SecureString"
-  value     = var.gemini_api_key
+  name  = "/${var.project_name}/${var.environment}/GEMINI_API_KEY"
+  type  = "SecureString"
+  value = var.gemini_api_key
 
   tags = {
     Name = "${local.name_prefix}-gemini-api-key"
