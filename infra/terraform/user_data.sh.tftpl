@@ -35,5 +35,6 @@ EOF
 
 systemctl daemon-reload
 systemctl enable kombot
+systemctl start kombot
 
 echo "Bootstrap concluído em $(date)" > /var/log/kombot-bootstrap.log
