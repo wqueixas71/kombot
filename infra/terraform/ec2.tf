@@ -25,6 +25,30 @@ resource "aws_instance" "kombot" {
 
   tags = {
     Name = "${local.name_prefix}-ec2"
+    App  = "kombot"
   }
 
+}
+
+resource "aws_iam_role_policy" "ec2_read_artifacts" {
+  name = "kombot-ec2-read-artifacts"
+  role = aws_iam_role.kombot_ec2.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:GetObjectVersion",
+          "s3:ListBucket"
+        ]
+        Resource = [
+          aws_s3_bucket.kombot_artifacts.arn,
+          "${aws_s3_bucket.kombot_artifacts.arn}/*"
+        ]
+      }
+    ]
+  })
 }
