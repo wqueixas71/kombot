@@ -1,0 +1,50 @@
+name: Deploy Kombot to EC2
+
+on:
+  push:
+    branches:
+      - aws
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: sa-east-1
+  S3_BUCKET: kombot-artifacts-400804529885
+  CODEDEPLOY_APP: kombot
+  CODEDEPLOY_GROUP: kombot-prod
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::400804529885:role/kombot-github-actions-role
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Package application
+        run: |
+          zip -r kombot-${{ github.sha }}.zip . \
+            -x ".git/*" \
+            -x ".github/*" \
+            -x "infra/*" \
+            -x "venv/*" \
+            -x "__pycache__/*"
+
+      - name: Upload artifact to S3
+        run: |
+          aws s3 cp kombot-${{ github.sha }}.zip s3://${S3_BUCKET}/kombot-${{ github.sha }}.zip
+
+      - name: Create CodeDeploy deployment
+        run: |
+          aws deploy create-deployment \
+            --application-name ${CODEDEPLOY_APP} \
+            --deployment-group-name ${CODEDEPLOY_GROUP} \
+            --s3-location bucket=${S3_BUCKET},key=kombot-${{ github.sha }}.zip,bundleType=zip
