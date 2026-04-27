@@ -3,6 +3,7 @@ set -euxo pipefail
 
 dnf update -y
 dnf install -y git python3 python3-pip
+dnf install -y ruby wget
 
 id kombot || useradd -m -s /bin/bash kombot
 
@@ -32,6 +33,14 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
+
+cd /tmp
+wget https://aws-codedeploy-${aws_region}.s3.${aws_region}.amazonaws.com/latest/install
+chmod +x ./install
+./install auto
+
+systemctl enable codedeploy-agent
+systemctl start codedeploy-agent
 
 systemctl daemon-reload
 systemctl enable kombot
